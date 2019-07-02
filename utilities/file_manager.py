@@ -9,18 +9,24 @@ def read_file(path):
 
 
 def write_file(path, text):
-    with open(path, "w") as file:
+    with open(path, 'w') as file:
         file.write(text + "\n")
 
 
 def append_file(path, text):
-    with open(path, "a") as file:
+    with open(path, 'a') as file:
         file.write(text + "\n")
 
 
 def read_binary_file(path):
     if os.path.exists(path):
-        return pickle.load(open(path, "rb"))
+        return pickle.load(open(path, 'rb'))
+    else:
+        raise Exception('File do not exists')
+
+
+def write_binary_file(path, obj):
+    pickle.dump(obj, open(path, 'wb'))
 
 
 def append_binary_file(path, obj):
@@ -32,7 +38,14 @@ def append_binary_file(path, obj):
 
         data.append(obj)
         write_file(path, data)
+    else:
+        write_file(path, [obj])
 
 
-def write_binary_file(path, obj):
-    pickle.dump(obj, open(path, "wb"))
+def remove_binary_file(path, obj):
+    if os.path.exists(path):
+        data = read_binary_file(path)
+        data.remove(obj)
+        write_binary_file(path, data)
+    else:
+        raise Exception('File do not exists')
