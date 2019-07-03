@@ -23,7 +23,7 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
         self.tableWidget_arcos: QtWidgets.QTableView
         self.tableWidget_dijkstra: QtWidgets.QTabWidget
 
-        # self.center_location()
+        self.center_location()
         self.tableWidget_arcos.verticalHeader().hide()
 
     def center_location(self):
@@ -52,6 +52,12 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
 
         # ---------------------------------------------------------------------
         self.action_graficar_grafo.triggered.connect(self.graficar_grafo)
+
+        # ---------------------------------------------------------------------
+        self.action_resolver.triggered.connect(self.resolver)
+
+        # ---------------------------------------------------------------------
+        self.action_creditos.triggered.connect(self.creditos)
 
         # ---------------------------------------------------------------------
         self.pushButton_agregar_nodo.clicked.connect(self.agregar_nodo)
@@ -93,9 +99,7 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
             self.grafo = read_binary_file(ruta)
             self.cargar_grafo()
         else:
-            DialogMensaje(
-                'Error al abrir', 'No fue posible abrir el archivo'
-            )
+            DialogMensaje('Error al abrir', 'No fue posible abrir el archivo')
 
     def cargar_grafo(self):
         for i in self.grafo.nodos:
@@ -265,7 +269,15 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
             DialogMensaje('Error al graficar un grafo', str(e)).exec()
 
     def resolver(self):
-        DialogDijkstra(self.grafo).exec()
+        eDialogDijkstra(self.grafo).exec()
+
+    def creditos(self):
+        DialogMensaje(
+            'Creditos',
+            'Programadores:\n\t'
+            '- Maria Jose Guerrero\n\t'
+            '- Jose Alejandro Castrillon',
+        ).exec()
 
 
 if __name__ == '__main__':

@@ -145,17 +145,13 @@ class DialogDijkstra(QtWidgets.QDialog):
         uic.loadUi('gui/dialog_dijkstra.ui', self)
 
         self.tableWidget_dijkstra.verticalHeader().hide()
-        
+
         for i in self.grafo.nodos:
             if i.conecciones:
                 self.comboBox_nodos.addItem(i.nombre)
 
     def init_events(self):
         self.pushButton_resolver.clicked.connect(self.solucionar)
-
-        self.pushButton_graficar_solucion.clicked.connect(
-            self.graficar_solucion
-        )
 
         self.pushButton_limpiar.clicked.connect(self.limpiar)
 
@@ -179,9 +175,43 @@ class DialogDijkstra(QtWidgets.QDialog):
             self.tableWidget_dijkstra.setItem(row_count, 1, etiqueta)
             self.tableWidget_dijkstra.setItem(row_count, 2, estado)
 
+        self.graficar_solucion(tabla)
 
-    def graficar_solucion(self):
-        self.grafo.graficar()
+    def graficar_solucion(self, tabla):
+        nuevo_grafo = Grafo()
+
+        for i in tabla:
+            destino = i[0].nombre
+            peso, origen = i[1]
+
+            if origen:
+                origen = origen.nombre
+
+            print(origen, destino, peso)
+
+            try:
+                if origen:
+                    nuevo_grafo.agregar_nodo(origen)
+            except:
+                pass
+            try:
+                if destino:
+                    nuevo_grafo.agregar_nodo(destino)
+            except:
+                pass
+            try:
+                if origen and destino:
+                    nuevo_grafo.conectar_nodos(origen, destino, peso)
+            except:
+                pass
+
+            print()
+            print(nuevo_grafo)
+
+        try:
+            nuevo_grafo.graficar()
+        except:
+            pass
 
     def limpiar(self):
         self.tableWidget_dijkstra.setRowCount(0)
