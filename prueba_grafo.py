@@ -10,15 +10,15 @@ from utilities import clear, read_binary_file, write_binary_file
 def test1():
     grafo = Grafo()
     for i in range(1, 6):
-        grafo.agregar_nodo(i)
+        grafo.agregar_nodo(str(i))
 
-    grafo.conectar_nodos(1, 2, 100)
-    grafo.conectar_nodos(1, 3, 30)
-    grafo.conectar_nodos(2, 3, 20)
-    grafo.conectar_nodos(3, 4, 10)
-    grafo.conectar_nodos(3, 5, 60)
-    grafo.conectar_nodos(4, 2, 15)
-    grafo.conectar_nodos(4, 5, 50)
+    grafo.conectar_nodos('1', '2', '100')
+    grafo.conectar_nodos('1', '3', '30')
+    grafo.conectar_nodos('2', '3', '20')
+    grafo.conectar_nodos('3', '4', '10')
+    grafo.conectar_nodos('3', '5', '60')
+    grafo.conectar_nodos('4', '2', '15')
+    grafo.conectar_nodos('4', '5', '50')
 
     return grafo
 
@@ -50,17 +50,7 @@ def test2():
 
 if __name__ == "__main__":
     clear()
-
     grafo = test1()
-
-    # write_binary_file("file.ext", grafo)
-
-    print(grafo)
-    grafo.eliminar_nodo(3)
-    print()
     print(grafo)
     # grafo.graficar()
-
-    # print(read_binary_file("file.ext"))
-
-    # dijkstra.solucionar(grafo)
+    dijkstra.solucionar(grafo.nodos[0], grafo)

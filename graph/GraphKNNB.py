@@ -1,10 +1,9 @@
 import numpy as np
 
-from graph.GraphRR import GraphRR
 from graph.DynamicGraph import DynamicGraph
 
 
-class GraphKNNB(GraphRR):
+class GraphKNNB(DynamicGraph):
     def __init__(self, source=[], target=[], weight=[], directed=True):
         DynamicGraph.__init__(self, source, target, weight, directed)
 

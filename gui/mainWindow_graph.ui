@@ -720,6 +720,7 @@
     <property name="title">
      <string>Herramientas</string>
     </property>
+    <addaction name="action_resolver"/>
    </widget>
    <widget class="QMenu" name="menuArchivo">
     <property name="title">
@@ -727,7 +728,6 @@
     </property>
     <addaction name="action_nuevo_grafo"/>
     <addaction name="action_guardar_grafo"/>
-    <addaction name="action_guardar_grafo_como"/>
     <addaction name="action_abrir_grafo"/>
     <addaction name="separator"/>
     <addaction name="action_salir"/>
@@ -801,6 +801,11 @@
   <action name="actionotro">
    <property name="text">
     <string>otro</string>
+   </property>
+  </action>
+  <action name="action_resolver">
+   <property name="text">
+    <string>Resolver</string>
    </property>
   </action>
  </widget>

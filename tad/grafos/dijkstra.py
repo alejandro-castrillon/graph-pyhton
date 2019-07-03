@@ -1,32 +1,59 @@
 from tad.grafos.grafo import Grafo
 
+P = "P"
+T = "T"
 
-def solucionar(grafo):
-    P = "P"
-    T = "T"
-    tabla = []
 
-    nodos = grafo.nodos
-    if not nodos:
+def solucionar(origen, unGrafo):
+    if not unGrafo.nodos:
         raise Exception('No hay nodos en el grafo')
 
-    origen = nodos[0]
-    etiqueta = [0, None]
+    tabla = [[origen, [0, None], P]]
+    visitados = [origen]
 
-    tabla.append([origen, etiqueta, P])
-
-    for i in nodos:
-        for j in i.conecciones:
-            ui = 0
-
-            k, dij = i.conecciones[j]
-            etiqueta = [ui + int(dij), i]
-
-            tabla.append([k, etiqueta, T])
+    funcion(origen, tabla, visitados, 0)
 
     mostrar_tabla(tabla)
-    ordenar_tabla(tabla)
-    mostrar_tabla(tabla)
+
+    return tabla
+
+
+def funcion(nodo, tabla, visitados, ui):
+    for i in nodo.conecciones:
+
+        j, dij = nodo.conecciones[i]
+
+        if j not in visitados:
+            ui += int(dij)
+            etiqueta = [ui, nodo]
+
+            repetidos = []
+            tabla.append([j, etiqueta, T])
+            for k in range(len(tabla)):
+                if tabla[k][0] == j:
+                    repetidos.append(tabla[k])
+
+            if len(repetidos) > 1:
+                for k in range(len(repetidos)):
+                    for l in range(k+1,len(repetidos)):
+                        _i = repetidos[k][1][0]
+                        _j = repetidos[l][1][0]
+                        if _i <= _j:
+                            tabla.remove(repetidos[l])
+                            repetidos.remove(repetidos[l])
+                            l -= 1
+                        else:
+                            tabla.remove(repetidos[l])
+                            repetidos.remove(repetidos[l])
+                            k -= 1
+
+                    # if k + 1 < len(repetidos):
+                    #     k -= 1
+
+            print(i)
+            visitados.append(j)
+            if j.conecciones:
+                funcion(j, tabla, visitados, ui)
 
 
 def mostrar_tabla(tabla):

@@ -12,7 +12,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.grafo = Grafo()
-        self.guardado = None
 
         self.init_components()
         self.init_events()
@@ -24,7 +23,7 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
         self.tableWidget_arcos: QtWidgets.QTableView
         self.tableWidget_dijkstra: QtWidgets.QTabWidget
 
-        self.center_location()
+        # self.center_location()
         self.tableWidget_arcos.verticalHeader().hide()
 
     def center_location(self):
@@ -38,9 +37,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
         # ---------------------------------------------------------------------
         self.action_nuevo_grafo.triggered.connect(self.nuevo_grafo)
         self.action_guardar_grafo.triggered.connect(self.guardar_grafo)
-        self.action_guardar_grafo_como.triggered.connect(
-            self.guardar_grafo_como
-        )
         self.action_abrir_grafo.triggered.connect(self.abrir_grafo)
         self.action_salir.triggered.connect(self.salir)
 
@@ -74,23 +70,11 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
         self.pushButton_resolver.clicked.connect(self.resolver)
 
     def nuevo_grafo(self):
-        if self.guardado == None:
-            pass
-        elif self.guardado == False:
-            pass
-        else:
-            self.listWidget_nodos.clear()
-            self.tableWidget_arcos.setRowCount(0)
-            self.guardado = False
+        self.grafo = Grafo()
+        self.listWidget_nodos.clear()
+        self.tableWidget_arcos.setRowCount(0)
 
-    # TODO: Guardar los cambios hechos en el grafo
     def guardar_grafo(self):
-        if self.guardado == None:
-            self.guardar_grafo_como()
-        elif self.guardado == False:
-            self.guardado = True
-
-    def guardar_grafo_como(self):
         try:
             path = QtWidgets.QFileDialog.getSaveFileName()[0]
             if path:
@@ -101,17 +85,17 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
             )
 
     def abrir_grafo(self):
-        if self.guardado != False:
-            ruta = QtWidgets.QFileDialog.getOpenFileName()[0]
+        self.nuevo_grafo()
+        ruta = QtWidgets.QFileDialog.getOpenFileName()[0]
 
-            if ruta:
-                self.grafo = read_binary_file(ruta)
-                self.nuevo_grafo()
-                self.cargar_grafo()
-            else:
-                DialogMensaje(
-                    'Error al abrir', 'No fue posible abrir el archivo'
-                )
+        if ruta:
+            self.nuevo_grafo()
+            self.grafo = read_binary_file(ruta)
+            self.cargar_grafo()
+        else:
+            DialogMensaje(
+                'Error al abrir', 'No fue posible abrir el archivo'
+            )
 
     def cargar_grafo(self):
         for i in self.grafo.nodos:
@@ -123,24 +107,8 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
 
                 self.agregar_fila([i.nombre, destino.nombre, peso])
 
-        if self.guardado:
-            self.guardado = False
-
-    def closeEvent(self, event):
-        self.salir()
-
-    # TODO: Verificacion de guardado del archivo
     def salir(self):
-        if self.guardado:
-            sys.exit()
-        else:
-            dialog_mensaje = DialogMensaje(
-                'Salir del programa', 'Guardar antes de Salir?'
-            )
-            dialog_mensaje.buttonBox.accepted.connect(self.guardar_grafo)
-            dialog_mensaje.buttonBox.accepted.connect(sys.exit)
-            dialog_mensaje.buttonBox.rejected.connect(sys.exit)
-            dialog_mensaje.exec()
+        sys.exit()
 
     def agregar_nodo(self):
         dialog_nodo = DialogNodo('Nuevo Nodo', 'Nombre del nuevo nodo:')
@@ -152,8 +120,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
                 self.grafo.agregar_nodo(nodo)
                 item = QtWidgets.QListWidgetItem(nodo)
                 self.listWidget_nodos.addItem(item)
-                if self.guardado:
-                    self.guardado = False
             except Exception as e:
                 DialogMensaje('Error al agregar un nodo', str(e)).exec()
 
@@ -169,9 +135,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
             nodo = dialog_nodo.nodo
             if nodo:
                 self.reemplazar_nodo_lista(text, nodo)
-
-                if self.guardado:
-                    self.guardado = False
 
     def reemplazar_nodo_lista(self, anterior, nuevo):
         try:
@@ -210,9 +173,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
                 k, l = i.conecciones[j]
                 self.agregar_fila([i.nombre, k.nombre, l])
 
-        if self.guardado:
-            self.guardado = False
-
     def agregar_arco(self):
         dialog_arco = DialogArco(
             'Nuevo Arco',
@@ -226,8 +186,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
             try:
                 self.grafo.conectar_nodos(*arco)
                 self.agregar_fila(arco)
-                if self.guardado:
-                    self.guardado = False
             except Exception as e:
                 DialogMensaje('Error al conectar los nodos', str(e)).exec()
 
@@ -264,9 +222,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
                     self.reemplazar_arco(row, anterior, nuevo)
             except Exception as e:
                 DialogMensaje('Error al editar un nodo', str(e)).exec()
-
-            if self.guardado:
-                self.guardado = False
         except Exception as e:
             print(str(e))
 
@@ -302,8 +257,6 @@ class MainWindowGrafo(QtWidgets.QMainWindow):
     def eliminar_arco_tabla(self, row, origen, destino):
         self.tableWidget_arcos.removeRow(row)
         self.grafo.desconectar_nodos(origen, destino)
-        if self.guardado:
-            self.guardado = False
 
     def graficar_grafo(self):
         try:

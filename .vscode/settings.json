@@ -1,8 +1,10 @@
 {
     "python.formatting.provider": "black",
     "python.formatting.blackArgs": [
-        "--line-length", "79",
+        "--line-length",
+        "79",
         "--skip-string-normalization"
     ],
-    "python.pythonPath": "/usr/bin/python"
+    "python.pythonPath": "C:\\Users\\Alejo\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
+    "python.jediEnabled": true
 }

@@ -1,8 +1,8 @@
-from graph.GraphKNNB import GraphKNNB
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
+from graph.GraphKNNB import GraphKNNB
 
 class GraphPro(GraphKNNB):
     def __init__(self, source=[], target=[], weight=[], directed=True):
